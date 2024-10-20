@@ -1,6 +1,8 @@
 import Tought from "../models/Tought.mjs";
 import User from "../models/User.mjs";
 
+import { Op } from "sequelize";
+
 export default class ToughtController {
   static dashboard = async (req, res) => {
     const userId = req.session.userid;
@@ -34,17 +36,39 @@ export default class ToughtController {
   };
 
   static showToughts = async (req, res) => {
+    let search = "";
+
+    if (req.query.search) {
+      search = req.query.search;
+    }
+
+    let order = "DESC";
+
+    if (req.query.order === "old") {
+      order = "ASC";
+    } else {
+      order = "DESC";
+    }
+
     const toughtsData = await Tought.findAll({
       include: User,
+      where: {
+        title: { [Op.like]: `%${search}%` },
+      },
+      order: [["createdAt", order]],
     });
 
     const toughts = toughtsData.map((result) => {
       return result.get({ plain: true });
     });
 
-    console.log(toughts);
+    let toughtsQty = toughts.length;
 
-    res.render("toughts/home", { toughts });
+    if (toughtsQty === 0) {
+      toughtsQty = false;
+    }
+
+    res.render("toughts/home", { toughts, search, toughtsQty });
   };
 
   static createTought = (req, res) => {
