@@ -1,8 +1,10 @@
 import Product from "../models/Product.mjs";
 
 export default class ProductController {
-  static showProducts = (req, res) => {
-    res.render("products/all");
+  static showProducts = async (req, res) => {
+    const products = await Product.getProducts();
+
+    res.render("products/all", { products });
   };
 
   static createProduct = (req, res) => {
@@ -11,10 +13,11 @@ export default class ProductController {
 
   static createProductPost = (req, res) => {
     const name = req.body.name;
+    const image = req.body.image;
     const price = req.body.price;
     const description = req.body.description;
 
-    const product = new Product(name, price, description);
+    const product = new Product(name, image, price, description);
 
     product.save();
 
