@@ -27,12 +27,21 @@ class Product {
   };
 
   static getProductById = async (id) => {
-    const product = conn
+    const product = await conn
       .db()
       .collection("products")
       .findOne({ _id: new ObjectId(id) });
 
     return product;
+  };
+
+  static removeProductById = async (id) => {
+    await conn
+      .db()
+      .collection("products")
+      .deleteOne({ _id: new ObjectId(id) });
+
+    return;
   };
 }
 

@@ -30,4 +30,12 @@ export default class ProductController {
 
     res.render("products/product", { product });
   };
+
+  static removeProduct = async (req, res) => {
+    const id = req.params.id;
+
+    await Product.removeProductById(id);
+
+    res.redirect("/products");
+  };
 }
