@@ -45,4 +45,14 @@ export default class ProductController {
 
     res.render("products/edit", { product });
   };
+
+  static editProductPost = async (req, res) => {
+    const { id, name, image, price, description } = req.body;
+
+    const product = new Product(name, image, price, description);
+
+    await product.updateProduct(id);
+
+    res.redirect("/products");
+  };
 }

@@ -1,5 +1,6 @@
 import conn from "../db/conn.mjs";
 import { ObjectId } from "mongodb";
+import mongoose from "mongoose";
 
 class Product {
   constructor(name, image, price, description) {
@@ -40,6 +41,18 @@ class Product {
       .db()
       .collection("products")
       .deleteOne({ _id: new ObjectId(id) });
+
+    return;
+  };
+
+  //como já é com o objeto product, não precisa do static
+  updateProduct = async (id) => {
+    const objectId = new mongoose.Types.ObjectId(id);
+
+    await conn
+      .db()
+      .collection("products")
+      .updateOne({ _id: objectId }, { $set: this });
 
     return;
   };
