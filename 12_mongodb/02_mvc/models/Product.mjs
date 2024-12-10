@@ -1,4 +1,6 @@
 import conn from "../db/conn.mjs";
+import { ObjectId } from "mongodb";
+import mongoose from "mongoose";
 
 class Product {
   constructor(name, image, price, description) {
@@ -25,6 +27,37 @@ class Product {
     const products = conn.db().collection("products").find().toArray();
 
     return products;
+  };
+
+  static getProductById = async (id) => {
+    const product = await conn
+      .db()
+      .collection("products")
+      .findOne({ _id: new ObjectId(id) });
+
+    return product;
+  };
+
+  static removeProductById = async (id) => {
+    await conn
+      .db()
+      .collection("products")
+      .deleteOne({ _id: new ObjectId(id) });
+
+    return;
+  };
+
+  //como já é com o objeto product, não precisa do static
+  updateProduct = async (id) => {
+    const objectId = new mongoose.Types.ObjectId(id);
+
+    await conn
+      .db()
+      .collection("products")
+      .updateOne({ _id: objectId }, { $set: this });
+    //como é pelo objecto (não tem static pra confirma) dá para usar o this
+
+    return;
   };
 }
 

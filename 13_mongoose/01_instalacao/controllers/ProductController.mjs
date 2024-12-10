@@ -1,11 +1,6 @@
 import Product from "../models/Product.mjs";
 
 export default class ProductController {
-  //static
-  //Static class methods are defined on the class itself.
-
-  //You cannot call a static method on an object, only on an object class.
-
   static showProducts = async (req, res) => {
     const products = await Product.getProducts();
 
@@ -29,9 +24,8 @@ export default class ProductController {
     res.redirect("/products");
   };
 
-  static getProduct = async (req, res) => {
+  static getProductById = async (req, res) => {
     const id = req.params.id;
-
     const product = await Product.getProductById(id);
 
     res.render("products/product", { product });
@@ -53,11 +47,7 @@ export default class ProductController {
   };
 
   static editProductPost = async (req, res) => {
-    const id = req.body.id;
-    const name = req.body.name;
-    const image = req.body.image;
-    const price = req.body.price;
-    const description = req.body.description;
+    const { id, name, image, price, description } = req.body;
 
     const product = new Product(name, image, price, description);
 
