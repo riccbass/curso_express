@@ -122,4 +122,34 @@ export default class UserController {
 
     res.status(200).send(currentUser);
   };
+
+  static getUserById = async (req, res) => {
+    const id = req.params.id;
+
+    if (id.length !== 24) {
+      res.status(422).json({ message: "id deve ter 24 carácteres" });
+      return;
+    }
+
+    const user = await User.findById(id).select("-password");
+
+    if (!user) {
+      res.status(422).json({ message: "Usuário não encontrado" });
+      return;
+    }
+
+    res.status(200).json({ user });
+  };
+
+  static editUser = async (req, res) => {
+    const id = req.params.id;
+
+    if (id.length !== 24) {
+      res.status(422).json({ message: "id deve ter 24 carácteres" });
+      return;
+    }
+
+    res.status(200).json({ message: "Deu certo o update" });
+    return;
+  };
 }
