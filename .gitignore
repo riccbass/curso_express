@@ -2,7 +2,7 @@
 **/node_modules
 
 # Ignora a pasta public em todos os subdiretórios
-**/public
+**/public/images
 
 
 # Ignora o arquivo package-lock.json, se necessário

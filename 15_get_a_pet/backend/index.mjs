@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 
 import UserRoutes from "./routes/UserRoutes.mjs";
+import PetRoutes from "./routes/PetRoutes.mjs";
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(express.static("public"));
 
 //routes
 app.use("/users", UserRoutes);
+app.use("/pets", PetRoutes);
 
 //front no 3000, back no 5000
 app.listen(5000);
