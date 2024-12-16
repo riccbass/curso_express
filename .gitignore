@@ -1,5 +1,9 @@
 # Ignora a pasta node_modules em todos os subdiretórios
 **/node_modules
 
+# Ignora a pasta public em todos os subdiretórios
+**/public
+
+
 # Ignora o arquivo package-lock.json, se necessário
 **/package-lock.json
