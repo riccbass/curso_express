@@ -6,6 +6,7 @@ export default class PetController {
   //create a pet
   static create = async (req, res) => {
     const { name, age, weight, color } = req.body;
+    const images = req.files;
 
     const available = true;
 
@@ -33,6 +34,11 @@ export default class PetController {
       return;
     }
 
+    if (images.length < 1) {
+      res.status(422).json({ message: "A imagem é obrigatória" });
+      return;
+    }
+
     //get pet owner
     const token = getToken(req);
     const user = await getUserByToken(token);
@@ -54,6 +60,10 @@ export default class PetController {
       },
     });
 
+    images.map((image) => {
+      pet.images.push(image.filename);
+    });
+
     try {
       const newPet = await pet.save();
       res.status(201).json({
@@ -63,5 +73,25 @@ export default class PetController {
     } catch (error) {
       res.status(500).json({ message: error });
     }
+  };
+
+  static getAll = async (req, res) => {
+    const pets = await Pet.find().sort("-createdAt");
+
+    res.status(200).json({
+      pets,
+    });
+  };
+
+  static getAllUserPets = async (req, res) => {
+    //get user from token
+    const token = getToken(req);
+    const user = await getUserByToken(token);
+
+    const pets = await Pet.find({ "user._id": user._id }).sort("-createdAt");
+
+    res.status(200).json({
+      pets,
+    });
   };
 }
