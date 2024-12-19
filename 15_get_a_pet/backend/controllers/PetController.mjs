@@ -1,6 +1,7 @@
 import getToken from "../helpers/get-token.mjs";
 import getUserByToken from "../helpers/get-user-by-token.mjs";
 import Pet from "../models/Pet.mjs";
+import mongoose from "mongoose";
 
 export default class PetController {
   //create a pet
@@ -93,5 +94,71 @@ export default class PetController {
     res.status(200).json({
       pets,
     });
+  };
+
+  static getAllUserAdoptions = async (req, res) => {
+    //get user from token
+    const token = getToken(req);
+    const user = await getUserByToken(token);
+
+    const pets = await Pet.find({ "adopter._id": user._id }).sort("-createdAt");
+
+    res.status(200).json({
+      pets,
+    });
+  };
+
+  static getPetById = async (req, res) => {
+    const id = req.params.id;
+
+    //check if id is valid
+    if (!mongoose.isValidObjectId(id)) {
+      res.status(422).json({ message: "ID inválido!" });
+      return;
+    }
+
+    //check if pet exists
+    const pet = await Pet.findOne({ _id: id });
+
+    if (!pet) {
+      res.status(404).json({ message: "Pet não encontrado" });
+      return;
+    }
+
+    res.status(200).json({
+      pet,
+    });
+  };
+
+  static removePetById = async (req, res) => {
+    const id = req.params.id;
+
+    //check if id is valid
+    if (!mongoose.isValidObjectId(id)) {
+      res.status(422).json({ message: "ID inválido!" });
+      return;
+    }
+
+    //check if pet exists
+    const pet = await Pet.findOne({ _id: id });
+
+    if (!pet) {
+      res.status(404).json({ message: "Pet não encontrado" });
+    }
+
+    //check if logged in user registered the pet
+    const token = getToken(req);
+    const user = await getUserByToken(token);
+
+    if (pet.user._id.toString() !== user._id.toString()) {
+      res.status(422).json({
+        message:
+          "Houve um problema em processar a sua solicitação, tente novamente mais tarde",
+      });
+    }
+
+    await Pet.findByIdAndDelete(id);
+
+    res.status(200).json({ message: "Pet removido com sucesso!" });
   };
 }
