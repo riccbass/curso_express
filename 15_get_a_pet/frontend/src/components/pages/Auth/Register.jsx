@@ -1,12 +1,26 @@
+import { useState } from "react";
+
 import Input from "../../form/Input";
+import styles from "../../form/Form.module.css";
+import { Link } from "react-router-dom";
 
 const Register = () => {
-  const handleOnChange = (e) => {};
+  const [user, setUser] = useState({});
+
+  const handleOnChange = (e) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    //enviar o usuário para o banco
+    console.log(user);
+  };
 
   return (
-    <section>
+    <section className={styles.form_container}>
       <h1>Register</h1>
-      <form>
+      <form onSubmit={handleSubmit}>
         <Input
           text="Nome"
           type="text"
@@ -44,6 +58,9 @@ const Register = () => {
         />
         <input type="submit" value="Cadastrar"></input>
       </form>
+      <p>
+        Já tem conta? <Link to="/login">Clique aqui</Link>
+      </p>
     </section>
   );
 };
