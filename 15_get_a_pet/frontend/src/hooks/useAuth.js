@@ -4,22 +4,31 @@ import api from "../utils/api";
 
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import useFlashMessage from "./useFlashMessage";
 
-const useAuth = () => {
-  const register = async (user) => {
+export default function useAuth() {
+  async function RegisterAuth(user) {
+    const { setFlashMessage } = useFlashMessage();
+
+    console.log("aqui");
+
+    let msgText = "Cadastro realizado com sucesso!";
+    let msgType = "success";
+
     try {
-      const data = api.post("/users/register", user).then((response) => {
+      const data = await api.post("/users/register", user).then((response) => {
         return response.data;
       });
 
       console.log(data);
     } catch (error) {
       //tratar o error
-      console.log(error);
+      msgText = error.response.data.message;
+      msgType = "error";
     }
-  };
 
-  return { register };
-};
+    setFlashMessage(msgText, msgType);
+  }
 
-export default useAuth;
+  return { RegisterAuth };
+}
