@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 
 import styles from "./Navbar.module.css";
 
 import Logo from "../../assets/img/logo.png";
 
+/* context */
+import { Context } from "../../context/UserContext";
+
 const Navbar = () => {
+  const { authenticated, logout } = useContext(Context);
+
   return (
     <nav className={styles.navbar}>
       <div className={styles.navbar_logo}>
@@ -16,12 +21,20 @@ const Navbar = () => {
         <li>
           <Link to="/">Adotar</Link>
         </li>
-        <li>
-          <Link to="/login">Entrar</Link>
-        </li>
-        <li>
-          <Link to="/register">Cadastrar</Link>
-        </li>
+        {authenticated ? (
+          <React.Fragment>
+            <li onClick={logout}>Sair</li>
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <li>
+              <Link to="/login">Entrar</Link>
+            </li>
+            <li>
+              <Link to="/register">Cadastrar</Link>
+            </li>
+          </React.Fragment>
+        )}
       </ul>
     </nav>
   );
