@@ -28,7 +28,7 @@ export default function useAuth() {
     navigate("/");
   }
 
-  async function RegisterAuth(user) {
+  async function register(user) {
     let msgText = "Cadastro realizado com sucesso!";
     let msgType = "success";
 
@@ -79,5 +79,5 @@ export default function useAuth() {
     setFlashMessage(msgText, msgType);
   }
 
-  return { authenticated, RegisterAuth, logout, login };
+  return { authenticated, register, logout, login };
 }

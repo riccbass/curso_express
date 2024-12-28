@@ -23,6 +23,9 @@ const Navbar = () => {
         </li>
         {authenticated ? (
           <React.Fragment>
+            <li>
+              <Link to="/user/profile">Perfil</Link>
+            </li>
             <li onClick={logout}>Sair</li>
           </React.Fragment>
         ) : (
