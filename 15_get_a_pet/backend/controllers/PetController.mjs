@@ -62,6 +62,7 @@ export default class PetController {
     });
 
     images.map((image) => {
+      console.log(image.filename);
       pet.images.push(image.filename);
     });
 
@@ -328,10 +329,8 @@ export default class PetController {
 
     await Pet.findByIdAndUpdate(id, pet);
 
-    res
-      .status(200)
-      .json({
-        message: "Parabéns! o ciclo de adoção foi finalizado com sucesso",
-      });
+    res.status(200).json({
+      message: "Parabéns! o ciclo de adoção foi finalizado com sucesso",
+    });
   };
 }

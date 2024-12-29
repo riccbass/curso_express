@@ -28,7 +28,8 @@ const imageStore = multer.diskStorage({
 export const imageUpload = multer({
   storage: imageStore,
   fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(png|jpg)$/)) {
+    console.log(file.originalname);
+    if (!file.originalname.match(/\.(png|jpg|jpeg)$/)) {
       return cb(new Error("Por favo, envie apenas jpg ou png!"));
     }
     cb(undefined, true);
