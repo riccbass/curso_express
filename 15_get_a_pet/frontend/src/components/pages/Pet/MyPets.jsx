@@ -25,6 +25,27 @@ const MyPets = () => {
       });
   }, [token]);
 
+  const removePet = async (id) => {
+    let msgType = "success";
+    const data = await api
+      .delete(`/pets/${id}`, {
+        headers: {
+          Authorization: `Bearer ${JSON.parse(token)}`,
+        },
+      })
+      .then((response) => {
+        const updatedPets = pets.filter((pet) => pet._id !== id);
+        setPets(updatedPets);
+        return response.data;
+      })
+      .catch((err) => {
+        msgType = "error";
+        return err.response.data;
+      });
+
+    setFlashMessage(data.message, msgType);
+  };
+
   return (
     <section>
       <div className={styles.petlist_header}>
@@ -50,7 +71,8 @@ const MyPets = () => {
                       </button>
                     )}
                     <Link to={`/pet/edit/${pet._id}`}>Editar</Link>
-                    <button>Excluir</button>
+                    {/* função anônima não executa qdo renderiza */}
+                    <button onClick={() => removePet(pet._id)}>Excluir</button>
                   </React.Fragment>
                 ) : (
                   <p>Pet Já adotado</p>
