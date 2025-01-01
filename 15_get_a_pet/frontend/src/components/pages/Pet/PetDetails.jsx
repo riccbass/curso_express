@@ -10,7 +10,7 @@ import useFlashMessage from "../../../hooks/useFlashMessage";
 const PetDetails = () => {
   const [pet, setPet] = useState({});
   const { id } = useParams();
-  const { setFlashMEssage } = useFlashMessage();
+  const { setFlashMessage } = useFlashMessage();
 
   const [token] = useState(localStorage.getItem("token") || "");
 
@@ -19,6 +19,26 @@ const PetDetails = () => {
       setPet(response.data.pet);
     });
   }, [id]);
+
+  const schedule = async () => {
+    let msgType = "success";
+
+    console.log(token);
+
+    const data = await api
+      .patch(`pets/schedule/${pet._id}`, {
+        Authorization: `Bearer ${JSON.parse(token)}`,
+      })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((err) => {
+        msgType = "error";
+        return err.response.data;
+      });
+
+    setFlashMessage(data.message, msgType);
+  };
 
   return (
     <React.Fragment>
@@ -44,7 +64,7 @@ const PetDetails = () => {
             <span className="bold">Idade:</span> {pet.age} anoes
           </p>
           {token ? (
-            <button>Solicitar uma visita</button>
+            <button onClick={schedule}>Solicitar uma visita</button>
           ) : (
             <p>
               Você precisa <Link to="/register">criar uma conta</Link> para
